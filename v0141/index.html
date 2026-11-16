@@ -1,0 +1,214 @@
+<html>
+<head>
+<base href="../">
+<title>Happy Wheels HTML5 - Levan Kipshidze</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <style>
+        body {
+            overflow: hidden;
+            background-color: black;
+        }
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: ¦666666; 
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: ¦CCCCCC; 
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: ¦CCCCCC; 
+        }
+
+        /* stupid firefox */
+        html {scrollbar-color: ¦CCCCCC ¦666666; scrollbar-width: thin; background-color: black;}
+    </style>
+
+
+<style>
+/* Mobile touch controls */
+#hw-touch{position:fixed;inset:0;pointer-events:none;z-index:9999;display:none;}
+#hw-touch.on{display:block;}
+.hw-btn{position:absolute;pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(20,20,20,.45);border:2px solid rgba(255,255,255,.45);color:#fff;font-family:Arial,sans-serif;font-weight:bold;box-sizing:border-box;}
+.hw-btn.held{background:rgba(255,255,255,.55);border-color:#fff;}
+.hw-btn.small{font-size:11px;}
+#hw-toggle{position:fixed;right:10px;top:10px;z-index:10000;width:44px;height:44px;border-radius:50%;background:rgba(20,20,20,.55);border:2px solid rgba(255,255,255,.45);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;}
+</style>
+</head>
+<body oncontextmenu="return false;">
+    <script>
+/* Happy Wheels off-domain fix.
+   The game fetches levels from totaljerkface.com, which blocks
+   cross-origin requests. /tjf/ is proxied to totaljerkface.com
+   by vercel.json (same-origin, so no CORS block).
+   Also, the game's level loader opens a synchronous XHR with a
+   responseType set, which browsers reject (InvalidAccessError);
+   such requests are forced async here. */
+(function () {
+  function proxify(u) {
+    if (typeof u !== 'string') return u;
+    var i = u.indexOf('totaljerkface.com/');
+    if (i >= 0) return '/tjf/' + u.slice(i + 'totaljerkface.com/'.length);
+    if (u.indexOf('googleusercontent.com') >= 0) return '/tjf/get_level.hw';
+    return u;
+  }
+  var origOpen = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (m, u, a, us, pw) {
+    var nu = proxify(u);
+    var rt = this.responseType;
+    if (a === false && rt && rt !== '') {
+      try { this.responseType = ''; } catch (e) {}
+      a = true;
+      var r = origOpen.call(this, m, nu, a, us, pw);
+      try { this.responseType = rt; } catch (e) {}
+      return r;
+    }
+    var r2;
+    try {
+      r2 = origOpen.call(this, m, nu, a, us, pw);
+    } catch (e) {
+      if (String(e).indexOf('Synchronous') >= 0 || String(e.name).indexOf('InvalidAccess') >= 0) {
+        try { this.responseType = ''; } catch (e2) {}
+        r2 = origOpen.call(this, m, nu, true, us, pw);
+        if (rt) { try { this.responseType = rt; } catch (e3) {} }
+      } else { throw e; }
+    }
+    return r2;
+  };
+  if (window.fetch) {
+    var origFetch = window.fetch;
+    window.fetch = function (u, o) {
+      var nu = (typeof u === 'string') ? proxify(u) : u;
+      return origFetch.call(this, nu, o);
+    };
+  }
+})();
+</script>
+    <script>
+        function report_loading_issue() {
+            var el = document.createElement("img");
+            el.src = "/DEBUG2/wrong-ref.png?wl=" + window.location + "&wpl=" + window.parent.location + "&wlh=" + window.location.host + "&wplh=" + window.parent.location.host;
+            el.style.position = "absolute";
+            el.style.left = "-9999px";
+            el.style.top = "-9999px";
+            document.body.appendChild(el);
+        }
+		const pathToMyURL = 'https://www-sites-opensocial.googleusercontent.com/gadgets/proxy/refresh=3600&container=enterprise/https://totaljerkface.com/get_level.hw';
+		
+
+        (function() {
+            window["HW_SETTINGS"] = {};
+            if(!(window.location != window.parent.location && window.location.host === "totaljerkface.com" && window.parent.location.host === "totaljerkface.com")) {
+            }
+
+
+            var d_el = document.createElement("script");
+			
+            d_el.src = "js/dependencies.ac8072eb8a22557c1b4828699b35bec7.js";
+            d_el.onload = function() {
+                var i_el = document.createElement("script");
+                i_el.src = "js/index.js";
+                // i_el.integrity = "sha384-GKAptyGydgK2fCaxFPGnAip+60TiYdFsB22A5ax8TB2dqT8ockqX1XI1rsr6fJIH";
+                i_el.onload = function() {
+                    document.getElementById("loading-indicator").remove();
+                }
+
+                document.body.appendChild(i_el);
+            }
+            document.body.appendChild(d_el);
+        })();
+    </script>
+
+    <div id="og-game-holder">
+        <p style="color:white" id="loading-indicator">Loading...</p>
+    </div>
+	
+		
+
+<div id="hw-toggle" title="Show/hide touch controls">&#127918;</div>
+<div id="hw-touch">
+  <div class="hw-btn" id="hw-left" style="left:16px;bottom:24px;width:64px;height:64px;font-size:28px;">&#9664;</div>
+  <div class="hw-btn" id="hw-right" style="left:96px;bottom:24px;width:64px;height:64px;font-size:28px;">&#9654;</div>
+  <div class="hw-btn" id="hw-up" style="right:96px;bottom:24px;width:64px;height:64px;font-size:28px;">&#9650;</div>
+  <div class="hw-btn" id="hw-down" style="right:176px;bottom:24px;width:64px;height:64px;font-size:28px;">&#9660;</div>
+  <div class="hw-btn" id="hw-jump" style="right:16px;bottom:104px;width:76px;height:76px;font-size:15px;">JUMP</div>
+  <div class="hw-btn small" id="hw-eject" style="right:16px;bottom:196px;width:52px;height:52px;">EJECT</div>
+</div>
+<script>
+/* Mobile touch controls: on-screen buttons dispatch synthetic arrow/space/Z
+   key events to the game (the stage listens on document for keydown/keyup
+   and reads event.keyCode). Buttons dispatch on document.body so the event
+   target is BODY (the game preventDefaults arrows/space only for BODY). */
+(function () {
+  var KEYMAP = {
+    'hw-left':  {code: 37, key: 'ArrowLeft',  c: 'ArrowLeft'},
+    'hw-right': {code: 39, key: 'ArrowRight', c: 'ArrowRight'},
+    'hw-up':    {code: 38, key: 'ArrowUp',    c: 'ArrowUp'},
+    'hw-down':  {code: 40, key: 'ArrowDown',  c: 'ArrowDown'},
+    'hw-jump':  {code: 32, key: ' ',          c: 'Space'},
+    'hw-eject': {code: 90, key: 'z',          c: 'KeyZ'}
+  };
+  function sendKey(k, type) {
+    var e;
+    try {
+      e = new KeyboardEvent(type, {bubbles: true, cancelable: true, key: k.key, code: k.c});
+    } catch (err) {
+      e = document.createEvent('Event');
+      e.initEvent(type, true, true);
+    }
+    try { Object.defineProperty(e, 'keyCode', {value: k.code}); } catch (err) {}
+    try { Object.defineProperty(e, 'which', {value: k.code}); } catch (err) {}
+    try { Object.defineProperty(e, 'key', {value: k.key}); } catch (err) {}
+    (document.body || document.documentElement).dispatchEvent(e);
+  }
+  function bindBtn(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var k = KEYMAP[id];
+    var held = false;
+    function down(ev) {
+      if (ev) { ev.preventDefault(); }
+      if (held) return;
+      held = true;
+      el.classList.add('held');
+      sendKey(k, 'keydown');
+    }
+    function up(ev) {
+      if (ev) { ev.preventDefault(); }
+      if (!held) return;
+      held = false;
+      el.classList.remove('held');
+      sendKey(k, 'keyup');
+    }
+    el.addEventListener('touchstart', down, {passive: false});
+    el.addEventListener('touchend', up, {passive: false});
+    el.addEventListener('touchcancel', up, {passive: false});
+    el.addEventListener('mousedown', down);
+    el.addEventListener('mouseup', up);
+    el.addEventListener('mouseleave', up);
+    el.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
+  }
+  Object.keys(KEYMAP).forEach(bindBtn);
+  var touch = document.getElementById('hw-touch');
+  var toggle = document.getElementById('hw-toggle');
+  var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  if (isTouch) touch.classList.add('on');
+  toggle.addEventListener('click', function () { touch.classList.toggle('on'); });
+  toggle.addEventListener('touchstart', function (ev) { ev.preventDefault(); touch.classList.toggle('on'); }, {passive: false});
+})();
+</script>
+</body>
+</html>
